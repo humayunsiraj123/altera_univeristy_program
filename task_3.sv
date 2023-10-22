@@ -1,8 +1,8 @@
-module task_3(
+module task_3#(parameter WIDTH =2)(
   input [9:0]SW,
   output [9:0]LEDR
 );
-  localparam WIDTH =2;
+  
   
   wire [WIDTH-1:0]u;
   wire [WIDTH-1:0]v;
@@ -17,10 +17,10 @@ module task_3(
   assign w = SW[4+:WIDTH];
   assign x = SW[6+:WIDTH];
   assign sel=SW[9-:WIDTH];
-  assign m = SW[0+:WIDTH];
+  assign LEDR[0+:WIDTH] = m;
   
   //simple implementaion 
-  M = sel[1] ?(sel[0] ? x : w)  :  (sel[0] ? v : u);
+  m = sel[1] ?(sel[0] ? x : w)  :  (sel[0] ? v : u);
 
  // case implmentation/
   always_comb
@@ -32,17 +32,17 @@ module task_3(
         2'b11 ;m = x;   
       endcase
     end
-    
+   // using if with priorty  
    always_comb
     begin
       if(sel == 2'b11)
         m = x;
       else if(sel == 2'b10)
-         m = w;
+        m = w;
       else if(sel == 2'b01)
-        2'b10 ;m = v;
+        m = v;
       else 
-        2'b11 ;m = u;
+        m = u;
     end
         
   

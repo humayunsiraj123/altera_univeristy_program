@@ -1,9 +1,8 @@
-module task_2(
+module task_2#(parameter WIDTH =4)(
   input [9:0]SW,
   output [9:0]LEDR
 );
-  localparam WIDTH =4;
-  
+   
   wire [WIDTH-1:0]X;
   wire [WIDTH-1:0]Y;
   wire [WIDTH-1:0]M;
