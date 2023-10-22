@@ -1,25 +1,33 @@
-module task_05 (
-	input        [9:0] sw   ,
-	output       [9:0] ledr ,
-	output logic [7:0][6:0] hex_disp
+module task_6 #(parameter NUM_DISP=8) (
+	input        [         9:0]      sw      ,
+	output       [         9:0]      ledr    ,
+	output logic [NUM_DISP-1:0][6:0] hex_disp
 );
 //as the hex display of fgpa is active low
 //for the task  we design seven seg active zero  based
 
 
-	wire [7:0][9:0] seg_in_vec ;
-	wire [7:0][2:0] mux_out_vec;
-	wire [7:0][6:0] seg_out_vec;
+	logic [NUM_DISP-1:0][NUM_DISP-1:0][2:0] seg_in_vec ;
+	logic [NUM_DISP-1:0][         2:0]      mux_out_vec;
 
 
-	assign seg_in_vec[0] = sw;
-	assign seg_in_vec[1] = {sw[9:8],sw[5:0],sw[7:6]};//for pattern  2
-	assign seg_in_vec[2] = {sw[9:8],sw[3:0],sw[7:6],sw[5:4]};//for pattern  2
-	assign seg_in_vec[3] = {sw[9:8],sw[1:0],sw[7:6],sw[5:4],sw[3:2]};//for pattern  2
-	assign hex_0         = seg_out_vec[0];
-	assign hex_1         = seg_out_vec[1];
-	assign hex_2         = seg_out_vec[2];
-	assign hex_3         = seg_out_vec[3];
+typedef enum {d,e,one,two,empty} char_e;
+	// 3'b000:  hex = 7'b0100001;//active low d=65
+	// 	3'b001:  hex = 7'b0000110;//active low e=6
+	// 	3'b010:  hex = 7'b1111001;//active low 1=121
+	// 	3'b011:  hex = 7'b1000000;//active low 0=
+	// 	3'b100:  hex = 7'b0100010;// character 2
+	// let say 7 for empty character
+
+	assign seg_in_vec[0] = {3'h7,3'h7,3'h7,3'h7,3'h7,3'h0,3'h1,3'h4};
+	assign seg_in_vec[1] = {3'h7,3'h7,3'h7,3'h7,3'h0,3'h1,3'h4,3'h7};
+	assign seg_in_vec[2] = {3'h7,3'h7,3'h7,3'h0,3'h1,3'h4,3'h7,3'h7};
+	assign seg_in_vec[3] = {3'h7,3'h7,3'h0,3'h1,3'h4,3'h7,3'h7,3'h7};
+	assign seg_in_vec[4] = {3'h7,3'h0,3'h1,3'h4,3'h7,3'h7,3'h7,3'h7};
+	assign seg_in_vec[5] = {3'h0,3'h1,3'h4,3'h7,3'h7,3'h7,3'h7,3'h7};
+	assign seg_in_vec[6] = {3'h1,3'h4,3'h7,3'h7,3'h7,3'h7,3'h7,3'h0};
+	assign seg_in_vec[7] = {3'h4,3'h7,3'h7,3'h7,3'h7,3'h7,3'h0,3'h1};
+
 
 
 // to for ledr to display the switch no is 1 or 0
@@ -31,17 +39,17 @@ module task_05 (
 	genvar a_gv;
 	generate
 
-		for(a_gv = 0 ; a_gv < 4; a_gv++)
+		for(a_gv = 0 ; a_gv < 8; a_gv++)
 			begin
-				task_3 i_task_3 (
-					.SW(seg_in_vec[a_gv]),
-					.LEDR(mux_out_vec[a_gv])
+
+				mux_N_to_M i_mux_N_to_M (
+					.in(seg_in_vec[a_gv]),
+					.sel(sw[9:7]),
+					.out(mux_out_vec[a_gv])
 				);
 
-			task_04 i_task_04 (
-				.sw (mux_out_vec[a_gv]),
-				.hex(seg_out_vec[a_gv])
-			);
+			decoder_3bit i_decoder_3bit (.sw(mux_out_vec[a_gv]), .hex(hex_disp[a_gv]));
+
 
 
 			end
@@ -69,4 +77,66 @@ task_04 i_task_04 (.sw(mux_out), .hex(hex_3));
 task_04 i_task_04 (.sw(mux_out), .hex(hex_3));
 */
 
-endmodule : task_04
+function display_7seg(input char_e char);
+	if(char == d) begin 
+	$display("   			   *");
+	$display("           *");
+	$display("           *");
+	$display("           *");
+	$display("************");
+	$display("*          *");
+	$display("*          *");
+	$display("*          *");
+	$display("************");
+	end
+	
+	if(char == e) begin 
+	$display("********** 	");
+	$display("*           ");
+	$display("*           ");
+	$display("*           ");
+	$display("**********  ");
+	$display("*           ");
+	$display("*           ");
+	$display("*           ");
+	$display("**********  ");
+	end
+	if(char == one) begin 
+	$display("   			  * ");
+	$display("          * ");
+	$display("          * ");
+	$display("          * ");
+	$display("  				* ");
+	$display("          * ");
+	$display("          * ");
+	$display("          * ");
+	$display("  				* ");
+	end
+	if(char == two) begin 
+	$display(" ***********");
+	$display("           *");
+	$display("           *");
+	$display("           *");
+	$display(" ***********");
+	$display(" *          ");
+	$display(" *          ");
+	$display(" *          ");
+	$display(" ***********");
+	end
+
+	if(char == zero) begin 
+	$display(" ***********");
+	$display(" *         *");
+	$display(" *         *");
+	$display(" *         *");
+	$display(" *         *");
+	$display(" *         *");
+	$display(" *         *");
+	$display(" *         *");
+	$display(" ***********");
+	end
+
+endfunction 
+endmodule : task_6
+
+ 

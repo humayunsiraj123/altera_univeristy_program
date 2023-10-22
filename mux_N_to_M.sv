@@ -4,12 +4,9 @@ module mux_N_to_M#(parameter NUM_SEL = 3,WIDTH = 1)(
   output [WIDTH-1:0]out
 );
   
-  
   always_comb
   begin
-    out ='0;
-    if(|sel)
-      out = in[sel];
+    out = in[sel];
   end
        
   
