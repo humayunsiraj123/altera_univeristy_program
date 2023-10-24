@@ -10,7 +10,7 @@ module task_3#(parameter WIDTH =2)(
   wire [WIDTH-1:0]x;
   
   wire [WIDTH-1:0]m;
-  wire sel ;
+  wire [WIDTH-1:0]sel ;
   
   assign u = SW[0+:WIDTH];
   assign v = SW[2+:WIDTH];
@@ -20,30 +20,31 @@ module task_3#(parameter WIDTH =2)(
   assign LEDR[0+:WIDTH] = m;
   
   //simple implementaion 
-  m = sel[1] ?(sel[0] ? x : w)  :  (sel[0] ? v : u);
+  assign m = sel[1] ?(sel[0] ? x : w)  :  (sel[0] ? v : u);
 
  // case implmentation/
-  always_comb
-    begin
-      case(sel)
-        2'b00 ;m = u;
-        2'b01 ;m = v;
-        2'b10 ;m = w;
-        2'b11 ;m = x;   
-      endcase
-    end
+  //always_comb
+   // begin
+   //   case(sel)
+   //     2'b00 ;m = u;
+   //     2'b01 ;m = v;
+   //     2'b10 ;m = w;
+   //     2'b11 ;m = x;   
+   //   endcase
+   // end
    // using if with priorty  
-   always_comb
-    begin
-      if(sel == 2'b11)
-        m = x;
-      else if(sel == 2'b10)
-        m = w;
-      else if(sel == 2'b01)
-        m = v;
-      else 
-        m = u;
-    end
+
+//always_comb
+  //  begin
+   //   if(sel == 2'b11)
+   //     m = x;
+   //   else if(sel == 2'b10)
+   //     m = w;
+   //   else if(sel == 2'b01)
+   //     m = v;
+   //   else 
+  //      m = u;
+  //  end
         
   
 endmodule

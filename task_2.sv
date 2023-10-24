@@ -14,7 +14,7 @@ module task_2#(parameter WIDTH =4)(
   assign M = LEDR[0+:WIDTH];
   
   //simple implementaion 
-  M = sel? Y : X;
+  assign M = sel? Y : X;
  
 //   // usong generate loop
   

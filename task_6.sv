@@ -11,7 +11,7 @@ module task_6 #(parameter NUM_DISP=8) (
 	logic [NUM_DISP-1:0][         2:0]      mux_out_vec;
 
 
-typedef enum {d,e,one,two,empty} char_e;
+typedef enum {d,e,one,two,empty,zero} char_e;
 	// 3'b000:  hex = 7'b0100001;//active low d=65
 	// 	3'b001:  hex = 7'b0000110;//active low e=6
 	// 	3'b010:  hex = 7'b1111001;//active low 1=121

@@ -72,4 +72,4 @@ task_04 i_task_04 (.sw(mux_out), .hex(hex_3));
 task_04 i_task_04 (.sw(mux_out), .hex(hex_3));
 */
 
-endmodule : task_04
+endmodule : task_05
